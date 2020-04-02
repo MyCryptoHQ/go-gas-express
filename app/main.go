@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"math/big"
 	"os"
 	"sort"
 	"strconv"
-
-	//"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -138,10 +137,10 @@ func roundDown(val float64) int {
 func createGasExpress(blocks []root.CachedBlockItem, blockEstimateNumber int64, lastBlock int64) root.GasExpress {
 	sort.Sort(byMinGas(blocks))
 	return root.GasExpress{
-		SafeLow:  helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*SAFELOW)].MinGas, 9),
-		Standard: helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*STANDARD)].MinGas, 9),
-		Fast:     helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*FAST)].MinGas, 9),
-		Fastest:  helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*FASTEST)].MinGas, 9),
+		SafeLow:  math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*SAFELOW)].MinGas, 9)),
+		Standard: math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*STANDARD)].MinGas, 9)),
+		Fast:     math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*FAST)].MinGas, 9)),
+		Fastest:  math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*FASTEST)].MinGas, 9)),
 		BlockNum: lastBlock,
 	}
 }
