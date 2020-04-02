@@ -151,7 +151,7 @@ func createGasExpress(blocks []root.CachedBlockItem, blockEstimateNumber int64, 
 }
 
 func parseBlockEstimate(blocks []root.CachedBlockItem, blockEstimateNum int64, threshold float64) float64 {
-	detectedGasPrice := math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNum)*SAFELOW)].MinGas, 9))
+	detectedGasPrice := math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNum)*threshold)].MinGas, 9))
 	if detectedGasPrice > MAX_GAS_PRICE {
 		return MAX_GAS_PRICE
 	}
