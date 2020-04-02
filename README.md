@@ -14,7 +14,7 @@ Provisions s3, lambda, api gateway, and route53 infrastructure and deploys the g
 ### To deploy:
 ```
     make deploy
-    cd terraform
+    cd terraform && terraform init
     terraform apply
 ```
 ### To rm deployment:
