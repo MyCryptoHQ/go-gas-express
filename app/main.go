@@ -27,6 +27,11 @@ var (
 	FASTEST  = 1.0
 )
 
+var (
+	MIN_GAS_PRICE = float64(1)
+	MAX_GAS_PRICE = float64(1000)
+)
+
 func handleRequest() {
 	blockEstimateNumber, err := strconv.ParseInt(root.Config.BlockEstimateCount, 10, 64)
 	if err != nil {
@@ -137,10 +142,21 @@ func roundDown(val float64) int {
 func createGasExpress(blocks []root.CachedBlockItem, blockEstimateNumber int64, lastBlock int64) root.GasExpress {
 	sort.Sort(byMinGas(blocks))
 	return root.GasExpress{
-		SafeLow:  math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*SAFELOW)].MinGas, 9)),
-		Standard: math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*STANDARD)].MinGas, 9)),
-		Fast:     math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*FAST)].MinGas, 9)),
-		Fastest:  math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNumber)*FASTEST)].MinGas, 9)),
+		SafeLow:  parseBlockEstimate(blocks, blockEstimateNumber, SAFELOW),
+		Standard: parseBlockEstimate(blocks, blockEstimateNumber, STANDARD),
+		Fast:     parseBlockEstimate(blocks, blockEstimateNumber, FAST),
+		Fastest:  parseBlockEstimate(blocks, blockEstimateNumber, FASTEST),
 		BlockNum: lastBlock,
 	}
+}
+
+func parseBlockEstimate(blocks []root.CachedBlockItem, blockEstimateNum int64, threshold float64) float64 {
+	detectedGasPrice := math.Ceil(helpers.ConvertFromBase(blocks[roundDown(float64(blockEstimateNum)*SAFELOW)].MinGas, 9))
+	if detectedGasPrice > MAX_GAS_PRICE {
+		return MAX_GAS_PRICE
+	}
+	if detectedGasPrice < MIN_GAS_PRICE {
+		return MIN_GAS_PRICE
+	}
+	return detectedGasPrice
 }
