@@ -1,0 +1,29 @@
+variable "region" {
+  type        = string
+  description = "The region to operate out of."
+}
+
+variable "profile" {
+  type        = string
+  description = "Name of AWS credentials profile."
+}
+
+variable "bucket" {
+  type        = string
+  description = "Name of gas-express S3 bucket."
+}
+
+variable "schedule" {
+  type        = string
+  description = "Schedule expression for Cloudwatch event trigger."
+}
+
+variable "nodeEndpoint" {
+  type        = string
+  description = "Endpoint for a JsonRPC Ethereum node"
+}
+
+variable "blockEstimateCount" {
+  type        = string
+  description = "Num of blocks to base estimate on"
+}

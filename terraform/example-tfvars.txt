@@ -1,0 +1,6 @@
+region   = "us-east-1"
+bucket   = "gas.mycryptodev.com"
+profile  = "default"
+schedule = "rate(5 minutes)"
+nodeEndpoint = "http://localhost:8080"
+blockEstimateCount = "100"
