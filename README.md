@@ -9,7 +9,7 @@ Provisions s3, lambda, api gateway, and route53 infrastructure and deploys the g
 #### To Deploy:
 
 1) `git clone https://github.com/mycryptohq/go-gas-express.git`
-2) `cd moonpaysigner`
+2) `cd go-gas-express`
 3) `make deploy` -> builds the go app and zips it up.
 4) `cd terraform && cp example-tfvars.txt terraform.tfvars`-> copies the example- tfvars txt file to a new tfvars file.
 5) Change the new `terraform.tfvars`'s vars to include the correct data
