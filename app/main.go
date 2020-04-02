@@ -63,7 +63,7 @@ func handleRequest() {
 	var newCache root.CachedItem
 	if cachedRun.LastBlock >= startBlockNum {
 		fmt.Printf("Num of blocks to lookup: %d\n", endBlockNum-cachedRun.LastBlock)
-		// If shit is in cachedRun, take those cachedBlocks and add to newCachedBlocks
+		// If relevant blocks are already in the cached blocks, take those cachedBlocks and add to newCachedBlocks
 		for _, item := range cachedRun.Blocks {
 			if item.BlockNum.Int64() >= startBlockNum {
 				newCachedBlocks = append(newCachedBlocks, item)
@@ -85,20 +85,15 @@ func handleRequest() {
 	}
 
 	gasExpressObject := createGasExpress(newCache.Blocks, blockEstimateNumber, endBlockNum)
-	prettyJSON, err := json.MarshalIndent(gasExpressObject, "", "    ")
-	if err != nil {
-		fmt.Println("Err: ", err)
-	}
-	fmt.Printf("GasExpress: %s ", string(prettyJSON))
 
 	// Write new cache to s3
-	newCacheFile, _ := json.MarshalIndent(newCache, "", "    ")
+	newCacheFile, _ := json.Marshal(newCache)
 	if err := s3.Upload(root.Config.Bucket, root.Config.Region, blockCacheFileEndpoint, bytes.NewReader(newCacheFile)); err != nil {
 		log.Println("Error uploading to s3", err)
 	}
 
 	// Write new gasExpress to s3
-	gasExpressFile, _ := json.MarshalIndent(gasExpressObject, "", "    ")
+	gasExpressFile, _ := json.Marshal(gasExpressObject)
 	if err := s3.Upload(root.Config.Bucket, root.Config.Region, gasExpressFileEndpoint, bytes.NewReader(gasExpressFile)); err != nil {
 		log.Println("Error uploading to s3", err)
 	}
